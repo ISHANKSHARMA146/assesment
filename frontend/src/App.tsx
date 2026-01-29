@@ -4,10 +4,12 @@ import EmployeeList from './components/employees/EmployeeList';
 import AttendanceManagement from './components/attendance/AttendanceManagement';
 import Tour from './components/onboarding/Tour';
 import { tourSteps } from './utils/tourSteps';
+import api from './services/api';
 
 type Page = 'dashboard' | 'employees' | 'attendance';
 
 const TOUR_STORAGE_KEY = 'hrms-lite-tour-completed';
+const KEEP_ALIVE_INTERVAL_MS = 40_000;
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
@@ -18,6 +20,13 @@ export default function App() {
     if (!tourCompleted) {
       setShowTour(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const ping = () => api.get('/health').catch(() => {});
+    const id = setInterval(ping, KEEP_ALIVE_INTERVAL_MS);
+    ping();
+    return () => clearInterval(id);
   }, []);
 
   const handleTourComplete = () => {
