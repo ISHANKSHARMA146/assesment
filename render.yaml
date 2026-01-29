@@ -1,0 +1,19 @@
+# Optional: use this when creating the backend Web Service from this repo.
+# If the service already exists, set in the Render dashboard:
+#   Root Directory: backend
+#   Build Command: pip install -r requirements.txt
+#   Start Command: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+#   Env: DATABASE_URL (from Render Postgres), CORS_ORIGINS (optional; *.vercel.app allowed by code)
+services:
+  - type: web
+    runtime: python
+    name: hrms-lite-api
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

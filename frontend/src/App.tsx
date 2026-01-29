@@ -3,6 +3,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import EmployeeList from './components/employees/EmployeeList';
 import AttendanceManagement from './components/attendance/AttendanceManagement';
 import Tour from './components/onboarding/Tour';
+import WelcomeOverlay from './components/onboarding/WelcomeOverlay';
 import { tourSteps } from './utils/tourSteps';
 import api from './services/api';
 
@@ -13,14 +14,23 @@ const KEEP_ALIVE_INTERVAL_MS = 40_000;
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+  const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(false);
   const [showTour, setShowTour] = useState(false);
+  const [tourKey, setTourKey] = useState(0);
 
   useEffect(() => {
     const tourCompleted = localStorage.getItem(TOUR_STORAGE_KEY);
     if (!tourCompleted) {
-      setShowTour(true);
+      setShowWelcomeOverlay(true);
     }
   }, []);
+
+  const handleStartTour = () => {
+    setShowWelcomeOverlay(false);
+    setCurrentPage('dashboard');
+    setTourKey((k) => k + 1);
+    setTimeout(() => setShowTour(true), 400);
+  };
 
   useEffect(() => {
     const ping = () => api.get('/health').catch(() => {});
@@ -35,7 +45,9 @@ export default function App() {
   };
 
   const handleRestartTour = () => {
-    setShowTour(true);
+    setCurrentPage('dashboard');
+    setTourKey((k) => k + 1);
+    setTimeout(() => setShowTour(true), 300);
   };
 
   const handleTourNavigate = (page: string) => {
@@ -145,7 +157,14 @@ export default function App() {
         {currentPage === 'attendance' && <AttendanceManagement />}
       </main>
 
-      <Tour steps={tourSteps} run={showTour} onComplete={handleTourComplete} onNavigate={handleTourNavigate} />
+      {showWelcomeOverlay && <WelcomeOverlay onStartTour={handleStartTour} />}
+      <Tour
+        key={tourKey}
+        steps={tourSteps}
+        run={showTour}
+        onComplete={handleTourComplete}
+        onNavigate={handleTourNavigate}
+      />
     </div>
   );
 }

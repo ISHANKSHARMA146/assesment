@@ -20,16 +20,11 @@ export default function Tour({ steps, run, onComplete, onNavigate }: TourProps) 
     
     if (type === 'step:before' && step?.target) {
       const target = step.target as string;
-      
-      if (target.includes('nav-employees')) {
-        onNavigate?.('employees');
-      } else if (target.includes('nav-attendance')) {
-        onNavigate?.('attendance');
-      } else if (target.includes('nav-dashboard')) {
+      if (target.includes('dashboard-stats') || target.includes('dashboard-recent') || target.includes('nav-dashboard')) {
         onNavigate?.('dashboard');
-      } else if (target.includes('employee-list')) {
+      } else if (target.includes('nav-employees') || target.includes('employee-list')) {
         onNavigate?.('employees');
-      } else if (target.includes('attendance-form') || target.includes('attendance-history')) {
+      } else if (target.includes('nav-attendance') || target.includes('attendance-form') || target.includes('attendance-history')) {
         onNavigate?.('attendance');
       }
     }

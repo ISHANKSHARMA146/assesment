@@ -2,8 +2,14 @@ import { Step } from 'react-joyride';
 
 export const tourSteps: Step[] = [
   {
+    target: 'body',
+    content: 'Welcome to HRMS Lite! This quick tour will show you the main features: dashboard, employees, and attendance.',
+    placement: 'center',
+    disableBeacon: true,
+  },
+  {
     target: '[data-tour="dashboard-stats"]',
-    content: 'Welcome to HRMS Lite! This dashboard shows key metrics including total employees and today\'s attendance summary.',
+    content: 'This dashboard shows key metrics: total employees, today\'s present/absent, and attendance rate.',
     placement: 'bottom',
   },
   {

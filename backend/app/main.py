@@ -17,9 +17,11 @@ app = FastAPI(title="HRMS Lite API", version="1.0.0")
 
 cors_origins_list = settings.cors_origins if isinstance(settings.cors_origins, list) else [settings.cors_origins]
 
+# Allow Vercel deployments (main + previews); exact list from CORS_ORIGINS still applied
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins_list,
+    allow_origin_regex=r"https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "Accept"],
